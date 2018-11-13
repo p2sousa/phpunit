@@ -83,7 +83,7 @@ class ProductModel
      * @param float $price
      * @return \App\Model\ProduProductModel
      */
-    public function setPrice(float $price): ProduProductModel
+    public function setPrice(float $price): ProductModel
     {
         $this->price = $price;
         return $this;
