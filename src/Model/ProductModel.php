@@ -39,6 +39,22 @@ class ProductModel
      * @var float 
      */
     private $total;
+    
+    /**
+     *
+     * @var \PDO 
+     */
+    private $pdo;
+    
+    /**
+     * ProductModel constructor.
+     * 
+     * @param \PDO $pdo
+     */
+    public function __construct(\PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
 
     /**
      * 
@@ -122,5 +138,67 @@ class ProductModel
     {
         $this->total = $total;
         return $this;
+    }
+    
+    /**
+     * setting database data in the model
+     * 
+     * @param array $data
+     * @return void
+     */
+    private function hydrate(array $data): void
+    {
+        $this->id = $data['id'];
+        $this
+            ->setName($data['name'])
+            ->setPrice($data['price'])
+            ->setQuantity($data['quantity'])
+            ->setTotal($data['total']);
+    }
+    
+    /**
+     * persist Insert data in database
+     * 
+     * @param array $data
+     * @return \App\Model\ProductModel
+     */
+    public function save(array $data): ProductModel
+    {
+        $query = "INSERT INTO products ("
+            . "`name`,"
+            . " `price`,"
+            . " `quantity`,"
+            . " `total`) VALUES ("
+            . " :name"
+            . " :price,"
+            . " :quantity,"
+            . " :total)";
+        
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindValue(":name", $data['name']);
+        $stmt->bindValue(":price", $data['price']);
+        $stmt->bindValue(":quantity", $data['quantity']);
+        $data['total'] = $data['price'] * $data['quantity'];
+        $stmt->bindValue(":total", $data['total']);
+        
+        $stmt->execute();
+        
+        $data['id'] = $this->pdo->lastInsertId();
+        $this->hydrate($data);
+        return $this;
+    }
+    
+    /**
+     * Find all
+     * 
+     * @return array
+     */
+    public function all(): array
+    {
+        $query = "SELECT * FROM products";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }
