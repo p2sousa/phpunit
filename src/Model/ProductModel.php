@@ -165,7 +165,7 @@ class ProductModel
     public function save(array $data): ProductModel
     {
         $query = "INSERT INTO products ("
-            . "`name`,"
+            . " `name`,"
             . " `price`,"
             . " `quantity`,"
             . " `total`) VALUES ("
