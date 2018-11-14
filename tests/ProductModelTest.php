@@ -9,52 +9,31 @@ use PHPUnit\Framework\TestCase;
  * @author pablosousa <pablosousa.ads@gmail.com>
  */
 class ProductModelTest extends TestCase
-{
-    public function testSetAndGetName()
+{    
+    /**
+     * @dataProvider collectionData
+     */
+    public function testEncapsulate($property,$expected,$actual)
     {
         $product = new ProductModel();
-        
         $this->assertInstanceOf(
             ProductModel::class,
-            $product->setName("Computer")
+            $product->{'set'. ucfirst($property)}($actual)
         );
         
-        $this->assertEquals("Computer", $product->getName());
+        $this->assertEquals(
+            $expected, 
+            $product->{'get'. ucfirst($property)}()
+        );
     }
     
-    public function testSetAndGetPrice()
+    public function collectionData()
     {
-        $product = new ProductModel();
-        
-        $this->assertInstanceOf(
-            ProductModel::class,
-            $product->setPrice(235.00)
-        );
-        
-        $this->assertEquals(235, $product->getPrice());
-    }
-    
-    public function testSetAndGetQuantity()
-    {
-        $product = new ProductModel();
-        
-        $this->assertInstanceOf(
-            ProductModel::class,
-            $product->setQuantity(3)
-        );
-        
-        $this->assertEquals(3, $product->getQuantity());
-    }
-    
-    public function testSetAndGetTotal()
-    {
-        $product = new ProductModel();
-        
-        $this->assertInstanceOf(
-            ProductModel::class,
-            $product->setTotal(1500.99)
-        );
-        
-        $this->assertEquals(1500.99, $product->getTotal());
+        return [
+            ['name','Computer','Computer'],
+            ['price',1500.00,1500],
+            ['quantity',2,2],
+            ['total',3000,3000],
+        ];
     }
 }
