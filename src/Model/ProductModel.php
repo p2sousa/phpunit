@@ -164,17 +164,29 @@ class ProductModel
      */
     public function save(array $data): ProductModel
     {
-        $query = "INSERT INTO products ("
-            . " `name`,"
-            . " `price`,"
-            . " `quantity`,"
-            . " `total`) VALUES ("
-            . " :name,"
-            . " :price,"
-            . " :quantity,"
-            . " :total)";
+        if (!$data['id']) {
+            $query = "INSERT INTO products ("
+                . " `name`,"
+                . " `price`,"
+                . " `quantity`,"
+                . " `total`) VALUES ("
+                . " :name,"
+                . " :price,"
+                . " :quantity,"
+                . " :total)";
+            
+            $stmt = $this->pdo->prepare($query);
+        } else {
+            $query = "UPDATE products set"
+                . " `name` = :name,"
+                . " `price` = :price,"
+                . " `quantity` = :quantity,"
+                . " `total` = :total"
+                . " WHERE `id` = :id";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindValue(":id", $data['id']);
+        }
         
-        $stmt = $this->pdo->prepare($query);
         $stmt->bindValue(":name", $data['name']);
         $stmt->bindValue(":price", $data['price']);
         $stmt->bindValue(":quantity", $data['quantity']);
@@ -183,7 +195,7 @@ class ProductModel
         
         $stmt->execute();
         
-        $data['id'] = $this->pdo->lastInsertId();
+        $data['id'] = $data['id'] ?? $this->pdo->lastInsertId();
         $this->hydrate($data);
         return $this;
     }

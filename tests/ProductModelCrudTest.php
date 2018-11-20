@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ProductModelCrudTest extends TestCase
 {    
-    public function testIfProductIsSaved()
+    public function testIfProductIsCreated()
     {
         global $db;
         
@@ -26,6 +26,30 @@ class ProductModelCrudTest extends TestCase
         $this->assertEquals(1500, $product->getPrice());
         $this->assertEquals(2, $product->getQuantity());
         $this->assertEquals(1500*2, $product->getTotal());
+        
+        return $product->getId();
+    }
+    
+    /**
+     * @depends testIfProductIsCreated
+     */
+    public function testIfProductIsUpdated($id)
+    {
+        global $db;
+        
+        $product = new ProductModel($db);
+        $result = $product->save([
+            "id" => $id,
+            "name" => "Smartphone",
+            "price" => 1500.00,
+            "quantity" => 4
+        ]);
+        
+        $this->assertEquals($id, $product->getId());
+        $this->assertEquals('Smartphone', $product->getName());
+        $this->assertEquals(1500, $product->getPrice());
+        $this->assertEquals(4, $product->getQuantity());
+        $this->assertEquals(1500*4, $product->getTotal());
     }
     
     public function testIfListProducts()
