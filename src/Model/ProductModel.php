@@ -169,7 +169,7 @@ class ProductModel
             . " `price`,"
             . " `quantity`,"
             . " `total`) VALUES ("
-            . " :name"
+            . " :name,"
             . " :price,"
             . " :quantity,"
             . " :total)";
