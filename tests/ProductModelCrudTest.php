@@ -50,8 +50,22 @@ class ProductModelCrudTest extends TestCase
         $this->assertEquals(1500, $product->getPrice());
         $this->assertEquals(4, $product->getQuantity());
         $this->assertEquals(1500*4, $product->getTotal());
+        
+        return $product->getId();
     }
     
+    /**
+     * @depends testIfProductIsUpdated
+     */
+    public function testIfProductCanDeleted($id)
+    {
+        global $db;
+        
+        $product = new ProductModel($db);
+        
+        $this->assertTrue($product->delete($id));
+    }
+
     public function testIfListProducts()
     {
         global $db;
@@ -64,6 +78,6 @@ class ProductModelCrudTest extends TestCase
         ]);
         
         $products = $product->all();
-        $this->assertCount(2, $products);
+        $this->assertCount(1, $products);
     }
 }
