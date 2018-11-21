@@ -228,4 +228,28 @@ class ProductModel
         
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+    
+    /**
+     * find one product in database, and set entity.
+     * 
+     * @param int $id
+     * @return \App\Model\ProductModel
+     * @throws \Exception
+     */
+    public function findOne(int $id): ProductModel
+    {
+        $query = "SELECT * FROM products WHERE id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
+        
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+        
+        if (!$data) {
+            throw new \Exception("Product not found", 404);
+        }
+        
+        $this->hydrate($data);
+        return $this;
+    }
 }
