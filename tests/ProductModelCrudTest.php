@@ -57,6 +57,23 @@ class ProductModelCrudTest extends TestCase
     /**
      * @depends testIfProductIsUpdated
      */
+    public function testIfProductCanBeRecovered($id)
+    {
+        global $db;
+        
+        $product = new ProductModel($db);
+        
+        $result = $product->findOne($id);
+        
+        $this->assertEquals('Smartphone', $result->getName());
+        $this->assertEquals(1500, $result->getPrice());
+        $this->assertEquals(4, $result->getQuantity());
+        $this->assertEquals(1500*4, $result->getTotal());
+    }
+    
+    /**
+     * @depends testIfProductIsUpdated
+     */
     public function testIfProductCanDeleted($id)
     {
         global $db;
@@ -79,5 +96,19 @@ class ProductModelCrudTest extends TestCase
         
         $products = $product->all();
         $this->assertCount(1, $products);
+    }
+    
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Product not found
+     */
+    public function testIfProductNotFound()
+    {
+        global $db;
+        
+        $product = new ProductModel($db);
+        
+        $product->findOne(-1);
+        
     }
 }
