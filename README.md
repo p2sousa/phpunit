@@ -12,5 +12,5 @@ $ composer update
 2. run tests in folder /testst/
 
 ```
-$ vendor/bin/phpunit tests/ProductModelCrudTest.php
+$ vendor/bin/phpunit
 ```
