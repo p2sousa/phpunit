@@ -15,7 +15,9 @@ class ProductModelTest extends TestCase
      */
     public function testEncapsulate($property,$expected,$actual)
     {
-        $product = new ProductModel();
+        global $db;
+        
+        $product = new ProductModel($db);
         $this->assertInstanceOf(
             ProductModel::class,
             $product->{'set'. ucfirst($property)}($actual)
