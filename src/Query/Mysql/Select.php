@@ -22,6 +22,13 @@ class Select
     private $fields;
     
     /**
+     *
+     * @var Filter
+     */
+    private $filter;
+
+
+    /**
      * 
      * @param string $table
      * @return \App\Query\Mysql\Select
@@ -42,7 +49,16 @@ class Select
         $this->fields = $fields;
         return $this;
     }
-
+    
+    /**
+     * 
+     * @param \App\Query\Mysql\Filter $filter
+     * @return void
+     */
+    public function filter(Filter $filter): void
+    {
+        $this->filter = $filter->getSql();
+    }
 
     /**
      * 
@@ -51,11 +67,16 @@ class Select
     public function getSql(): string
     {
         $fields = '*';
+        $filter = '';
         
         if ($this->fields) {
             $fields = implode(', ', $this->fields);
         }
         
-        return sprintf("SELECT %s FROM %s;", $fields, $this->table);
+        if ($this->filter) {
+            $filter = ' ' . $this->filter; 
+        }
+        
+        return sprintf("SELECT %s FROM %s%s;", $fields, $this->table, $filter);
     }
 }

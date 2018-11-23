@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true" bootstrap="tests/bootstrap.php">
     <testsuites>
-        <testsuite name="main test"> 
-            <directory>./tests</directory>
+        <testsuite name="test unit"> 
+            <directory>./tests/Unit</directory>
+        </testsuite>
+        
+        <testsuite name="test integration"> 
+            <directory>./tests/Integration</directory>
         </testsuite>
     </testsuites>
 </phpunit>
