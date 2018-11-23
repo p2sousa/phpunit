@@ -9,7 +9,17 @@ namespace App\Query\Mysql;
  */
 class Select
 {
+    /**
+     *
+     * @var string 
+     */
     private $table;
+    
+    /**
+     *
+     * @var array 
+     */
+    private $fields;
     
     /**
      * 
@@ -24,10 +34,28 @@ class Select
     
     /**
      * 
+     * @param array $fields
+     * @return \App\Query\Mysql\Select
+     */
+    public function fields(array $fields): Select
+    {
+        $this->fields = $fields;
+        return $this;
+    }
+
+
+    /**
+     * 
      * @return string
      */
     public function getSql(): string
     {
-        return sprintf("SELECT * FROM %s;", $this->table);
+        $fields = '*';
+        
+        if ($this->fields) {
+            $fields = implode(', ', $this->fields);
+        }
+        
+        return sprintf("SELECT %s FROM %s;", $fields, $this->table);
     }
 }
