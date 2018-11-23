@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  */
 class SelectTest extends TestCase
 {
-    public function testWithoutFilter()
+    public function testWithoutFields()
     {
         $select = new Select();
         $select->setTable('products');
@@ -23,6 +23,28 @@ class SelectTest extends TestCase
     }
     
     public function testSelectWhitFilter()
+    {
+        $select = new Select();
+        
+        $select->setTable('products');
+        
+        
+        $stub = $this->getMockBuilder(Filter::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        
+        $stub->method('getSql')
+            ->willReturn('WHERE id=1 ORDER BY name ASC');
+        
+        $select->filter($stub);
+        
+        $this->assertEquals(
+            'SELECT * FROM products WHERE id=1 ORDER BY name ASC;', 
+            $select->getSql()
+        );
+    }
+    
+    public function testSelectWhitFields()
     {
         $select = new Select();
         
