@@ -28,6 +28,6 @@ class Select
      */
     public function getSql(): string
     {
-        return "SELECT * FROM products";
+        return sprintf("SELECT * FROM %s;", $this->table);
     }
 }

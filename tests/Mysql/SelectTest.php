@@ -17,7 +17,7 @@ class SelectTest extends TestCase
         $select->setTable('products');
         
         $this->assertEquals(
-            'SELECT * FROM products', 
+            'SELECT * FROM products;', 
             $select->getSql()
         );
     }
