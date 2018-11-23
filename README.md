@@ -9,8 +9,19 @@ $ git clone https://github.com/p2sousa/phpunit.git
 $ composer update
 ```
 
-2. run tests in folder /testst/
+2. run tests in folder /tests/
 
 ```
 $ vendor/bin/phpunit
+```
+3. run tests unit
+
+```
+$ vendor/bin/phpunit tests/Unit
+```
+
+4. run tests integration
+
+```
+$ vendor/bin/phpunit tests/Integration
 ```
