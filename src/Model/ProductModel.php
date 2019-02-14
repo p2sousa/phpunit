@@ -51,7 +51,7 @@ class ProductModel
      * 
      * @param \PDO $pdo
      */
-    public function __construct(\PDO $pdo)
+    public function __construct(\PD $pdo)
     {
         $this->pdo = $pdo;
     }
