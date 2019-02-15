@@ -38,21 +38,63 @@ jobs:
           key: v1-dependencies-{{ checksum "composer.json" }}
           paths:
             - ./vendor
-      # - restore_cache:
-      #     keys:
-      #       - node-v1-{{ checksum "package.json" }}
-      #       - node-v1-
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "composer.json" }}
+            - v1-dependencies-
       - run: yarn install
-      # - save_cache:
-      #     key: node-v1-{{ checksum "package.json" }}
-      #     paths:
-      #       - node_modules
 
-      # prepare the database
-      # - run: touch storage/testing.sqlite
-      # - run: php artisan migrate --env=testing --database=sqlite_testing --force
+  test:
+    docker:
+      # Specify the version you desire here
+      - image: circleci/php:7.1-node-browsers
 
-      # run tests with phpunit or codecept
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v1-dependencies-{{ checksum "composer.json" }}
+            - v1-dependencies-
+
+      # run tests with phpunit
       - run: ./vendor/bin/phpunit
-      # - run: ./vendor/bin/codecept build
-      # - run: ./vendor/bin/codecept run
+
+workflows:
+  version: 2
+  build-and-deploy-on-hold:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - master
+                - develop
+
+      - test:
+          requires:
+            - build
+
+      - hold:
+          type: approval
+          requires:
+            - test
+
+      - deploy-development:
+          requires:
+            - test
+            - build
+          filters:
+            branches:
+              only: develop
+
+      - deploy-prod:
+          requires:
+            - build
+            - test
+            - hold
+          filters:
+            branches:
+              only: master
